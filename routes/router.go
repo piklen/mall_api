@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"mall_api/api"
+	"mall_api/api/v"
 	"mall_api/middleware"
 	"net/http"
 )
@@ -17,7 +17,7 @@ func NewRouter() *gin.Engine {
 	r.Use(middleware.Cors())
 	//静态页面返回
 	r.StaticFS("/static", http.Dir("./static"))
-	r.POST("user/register", api.UserRegister)
+	r.POST("user/register", v.UserRegister)
 	//v := r.Group("api")
 	//{
 	//	// 用户操作

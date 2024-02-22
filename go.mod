@@ -5,7 +5,7 @@ go 1.22.0
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.1
-	github.com/piklen/pb v0.1.3
+	github.com/piklen/pb v0.1.6
 	github.com/sirupsen/logrus v1.9.3
 	google.golang.org/grpc v1.62.0
 )

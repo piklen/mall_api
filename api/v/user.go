@@ -64,10 +64,11 @@ func UserRegister(c *gin.Context) {
 func UserLogin(c *gin.Context) {
 	var userRegister UserService
 	if err := c.ShouldBind(&userRegister); err != nil {
-		c.JSON(http.StatusBadRequest, "gin框架数据绑定失败！！！") //绑定不成功返回错误
+		c.JSON(http.StatusBadRequest, gin.H{"error": "gin框架数据绑定失败！！！"})
 		log.LogrusObj.Infoln(err)
 		return
 	}
+	// 解析命令行标志
 	flag.Parse()
 	// 连接到server端，此处禁用安全传输
 	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
@@ -81,6 +82,7 @@ func UserLogin(c *gin.Context) {
 	// 执行RPC调用并打印收到的响应数据
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*100)
 	defer cancel()
+	// 从表单中获取用户名和密码
 	username := c.PostForm("user_name")
 	password := c.PostForm("password")
 	r, err := client.UserLogin(ctx, &p.UserRegisterRequest{

@@ -18,6 +18,7 @@ func NewRouter() *gin.Engine {
 	//静态页面返回
 	r.StaticFS("/static", http.Dir("./static"))
 	r.POST("user/register", v.UserRegister)
+	r.POST("user/login", v.UserLogin)
 	//v := r.Group("api")
 	//{
 	//	// 用户操作

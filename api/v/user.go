@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	p "github.com/piklen/pb"
+	p "github.com/piklen/pb/user"
 	"google.golang.org/grpc"
 	"mall_api/pkg/log"
 	"net/http"
@@ -26,7 +26,7 @@ var (
 func UserRegister(c *gin.Context) {
 	var userRegister UserService
 	if err := c.ShouldBind(&userRegister); err != nil {
-		c.JSON(http.StatusBadRequest, "绑定失败！！！") //绑定不成功返回错误
+		c.JSON(http.StatusBadRequest, "gin框架数据绑定失败！！！") //绑定不成功返回错误
 		log.LogrusObj.Infoln(err)
 		return
 	}
@@ -34,7 +34,7 @@ func UserRegister(c *gin.Context) {
 	// 连接到server端，此处禁用安全传输
 	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
 	if err != nil {
-		fmt.Println("连接失败！！！")
+		fmt.Println("grpc连接失败！！！")
 		log.LogrusObj.Infoln(err)
 		return
 	}
@@ -47,14 +47,48 @@ func UserRegister(c *gin.Context) {
 	username := c.PostForm("user_name")
 	password := c.PostForm("password")
 	key := c.PostForm("key")
-	r, err := client.UpdateName(ctx, &p.UserRegister{
+	r, err := client.RegisterUser(ctx, &p.UserRegisterRequest{
 		NickName: nickname,
 		UserName: username,
 		Password: password,
 		Key:      key,
 	})
 	if err != nil {
-		fmt.Println("调用失败！！！")
+		fmt.Println("grpc调用失败！！！")
+		log.LogrusObj.Infoln(err)
+		return
+	}
+	fmt.Println("连接成功！！！")
+	c.JSON(http.StatusOK, r)
+}
+func UserLogin(c *gin.Context) {
+	var userRegister UserService
+	if err := c.ShouldBind(&userRegister); err != nil {
+		c.JSON(http.StatusBadRequest, "gin框架数据绑定失败！！！") //绑定不成功返回错误
+		log.LogrusObj.Infoln(err)
+		return
+	}
+	flag.Parse()
+	// 连接到server端，此处禁用安全传输
+	conn, err := grpc.Dial(*addr, grpc.WithInsecure())
+	if err != nil {
+		fmt.Println("grpc连接失败！！！")
+		log.LogrusObj.Infoln(err)
+		return
+	}
+	defer conn.Close()
+	client := p.NewUserServiceClient(conn)
+	// 执行RPC调用并打印收到的响应数据
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*100)
+	defer cancel()
+	username := c.PostForm("user_name")
+	password := c.PostForm("password")
+	r, err := client.UserLogin(ctx, &p.UserRegisterRequest{
+		UserName: username,
+		Password: password,
+	})
+	if err != nil {
+		fmt.Println("grpc调用失败！！！")
 		log.LogrusObj.Infoln(err)
 		return
 	}

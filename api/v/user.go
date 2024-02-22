@@ -62,66 +62,6 @@ func UserRegister(c *gin.Context) {
 	c.JSON(http.StatusOK, r)
 }
 
-//type UserService struct {
-//	NickName string `form:"nick_name" json:"nick_name"`
-//	UserName string `form:"user_name" json:"user_name"`
-//	Password string `form:"password" json:"password"`
-//	Key      string `form:"key" json:"key"` // 前端进行验证
-//}
-//
-//var (
-//	addr = flag.String("addr", "127.0.0.1:8972", "the address to connect to")
-//)
-//
-//func UserRegister(c *gin.Context) {
-//	var userRegister UserService
-//	if err := c.ShouldBind(&userRegister); err == nil {
-//		flag.Parse()
-//		// 连接到server端，此处禁用安全传输
-//		conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-//		if err != nil {
-//			fmt.Println("连接失败！！！")
-//		}
-//		defer conn.Close()
-//		client := p.NewUserServiceClient(conn)
-//		if err != nil {
-//			fmt.Println("连接失败！！！")
-//		}
-//		// 执行RPC调用并打印收到的响应数据
-//		ctx, cancel := context.WithTimeout(context.Background(), time.Second*100)
-//		defer cancel()
-//		nickname := c.PostForm("NickName")
-//		username := c.PostForm("Userame")
-//		password := c.PostForm("PassWord")
-//		key := c.PostForm("Key")
-//		r, err := client.UpdateName(ctx, &p.UserRegister{
-//			NickName: nickname,
-//			UserName: username,
-//			Password: password,
-//			Key:      key,
-//		})
-//		if err != nil {
-//			fmt.Println("调用失败！！！")
-//		}
-//		fmt.Println("连接成功！！！")
-//		c.JSON(http.StatusOK, r)
-//	} else {
-//		c.JSON(http.StatusBadRequest, "绑定失败！！！") //绑定不成功返回错误
-//		log.LogrusObj.Infoln(err)
-//	}
-//}
-
-//func UserRegister(c *gin.Context) {
-//	var userRegister service.UserService
-//	if err := c.ShouldBind(&userRegister); err == nil {
-//		res := userRegister.Register(c.Request.Context())
-//		c.JSON(http.StatusOK, res)
-//	} else {
-//		c.JSON(http.StatusBadRequest, ErrorResponse(err)) //绑定不成功返回错误
-//		log.LogrusObj.Infoln(err)
-//	}
-//}
-//
 //func BotchUserRegister(c *gin.Context) {
 //	var userRegister service.BatchUsersService
 //	if err := c.ShouldBind(&userRegister); err == nil {

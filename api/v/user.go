@@ -55,17 +55,6 @@ func UserLogin(c *gin.Context) {
 		log.LogrusObj.Infoln(err)
 		return
 	}
-	//// 解析命令行标志
-	//flag.Parse()
-	//// 连接到server端，此处禁用安全传输
-	//conn, err := grpc.Dial(*addr, grpc.WithInsecure())
-	//if err != nil {
-	//	fmt.Println("grpc连接失败！！！")
-	//	log.LogrusObj.Infoln(err)
-	//	return
-	//}
-	//defer conn.Close()
-	//client := p.NewUserServiceClient(conn)
 	client := grpcclient.GetUserClient()
 	// 执行RPC调用并打印收到的响应数据
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*100)

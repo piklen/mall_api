@@ -26,6 +26,12 @@ type SendEmailService struct {
 	// OperationType 1:绑定邮箱 2：解绑邮箱 3：改密码
 	OperationType uint `form:"operation_type" json:"operation_type"`
 }
+type SendCodeService struct {
+	Email    string `form:"email" json:"email"`
+	Password string `form:"password" json:"password"`
+	// OperationType 1:绑定邮箱 2：解绑邮箱 3：改密码
+	OperationType uint `form:"operation_type" json:"operation_type"`
+}
 type ValidEmailService struct {
 }
 type ShowMoneyService struct {
@@ -174,6 +180,35 @@ func SendEmail(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// SendCode 发送验证码
+func SendCode(c *gin.Context) {
+	var SendCodeService SendCodeService
+	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
+	if err := c.ShouldBind(&SendCodeService); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "gin框架数据绑定失败！！！"})
+		log.LogrusObj.Infoln(err)
+		return
+	}
+	client := grpcclient.GetUserClient()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*100)
+	defer cancel()
+	operationType := c.PostForm("operation_type")
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+	res, err := client.SendCode(ctx, &p.SendCodeRequest{
+		UserId:        strconv.Itoa(int(claims.ID)),
+		OperationType: operationType,
+		Email:         email,
+		Password:      password,
+	})
+	if err != nil {
+		fmt.Println("grpc调用失败！！！")
+		log.LogrusObj.Infoln(err)
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
 func ValidEmail(c *gin.Context) {
 	var validEmailService ValidEmailService
 	if err := c.ShouldBind(validEmailService); err != nil {
@@ -184,8 +219,10 @@ func ValidEmail(c *gin.Context) {
 	client := grpcclient.GetUserClient()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*100)
 	defer cancel()
+	token := c.Query("token")
+	fmt.Println("Token:", token)
 	res, err := client.ValidEmail(ctx, &p.ValidEmailRequest{
-		Token: c.GetHeader("Authorization"),
+		Token: c.Query("token"),
 	})
 	if err != nil {
 		fmt.Println("grpc调用失败！！！")

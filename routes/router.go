@@ -26,11 +26,12 @@ func NewRouter() *gin.Engine {
 		authed.Use(middleware.JWT())
 		{
 			// 用户操作
-			authed.POST("user/update", api.UpdateNickName) //更新昵称
-			authed.POST("user/avatar", api.UploadAvatar)   // 上传头像
-			authed.POST("user/send_email", api.SendEmail)  //发送邮件
-			authed.GET("user/valid_email", api.ValidEmail) //邮箱变更修改绑定等
-			authed.POST("user/send_code", api.SendCode)    //发送验证码
+			authed.POST("user/update", api.UpdateNickName)  //更新昵称
+			authed.POST("user/avatar", api.UploadAvatar)    // 上传头像
+			authed.POST("user/send_email", api.SendEmail)   //发送邮件
+			authed.GET("user/valid_email", api.ValidEmail)  //邮箱变更修改绑定等
+			authed.POST("user/send_code", api.SendCode)     //发送验证码
+			authed.POST("user/verify_code", api.VerifyCode) //验证验证码
 			// 显示金额
 			authed.POST("money", api.ShowMoney)
 			////商品操作

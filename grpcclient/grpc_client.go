@@ -13,9 +13,19 @@ var (
 	userClient pb.UserServiceClient
 )
 
+const (
+	// 设置最大传输内容大小为50MB
+	maxMsgSize = 50 * 1024 * 1024
+)
+
 func init() {
 	var err error
-	grpcConn, err = grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	grpcConn, err = grpc.Dial(
+		addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		//设置最大传输请求大小
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxMsgSize), grpc.MaxCallSendMsgSize(maxMsgSize)),
+	)
 	if err != nil {
 		log.LogrusObj.Infoln("Failed to connect to gRPC server: %v", err)
 	}

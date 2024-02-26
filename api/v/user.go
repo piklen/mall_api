@@ -87,6 +87,8 @@ func UserLogin(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, r)
 }
+
+// UpdateNickName 更改昵称
 func UpdateNickName(c *gin.Context) {
 	var UpdateNickNameService UserService
 	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
@@ -114,7 +116,7 @@ func UpdateNickName(c *gin.Context) {
 
 // UploadAvatar 上传头像
 func UploadAvatar(c *gin.Context) {
-	file, fileHeader, _ := c.Request.FormFile("file")
+	file, _, _ := c.Request.FormFile("file")
 	content, err := io.ReadAll(file)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -122,7 +124,6 @@ func UploadAvatar(c *gin.Context) {
 		})
 		return
 	}
-	fileSize := fileHeader.Size
 	uploadAvatarService := UserService{}
 	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
 	if err := c.ShouldBind(&uploadAvatarService); err != nil {
@@ -131,12 +132,11 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 	client := grpcclient.GetUserClient()
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*100)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*1000)
 	defer cancel()
 	res, err := client.UploadAvatar(ctx, &p.UploadAvatarRequest{
 		UserId:   strconv.Itoa(int(claims.ID)),
 		FileData: content,
-		FileSize: fileSize,
 	})
 	if err != nil {
 		fmt.Println("grpc调用失败！！！")

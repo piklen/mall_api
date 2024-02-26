@@ -27,7 +27,7 @@ func NewRouter() *gin.Engine {
 		{
 			// 用户操作
 			authed.POST("user/update", api.UpdateNickName)   //更新昵称
-			authed.POST("avatar", api.UploadAvatar)          // 上传头像
+			authed.POST("user/avatar", api.UploadAvatar)     // 上传头像
 			authed.POST("user/sending-email", api.SendEmail) //发送邮件
 			authed.POST("user/valid-email", api.ValidEmail)  //邮箱变更修改绑定等
 			// 显示金额

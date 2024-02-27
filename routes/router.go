@@ -40,8 +40,8 @@ func NewRouter() *gin.Engine {
 			//authed.POST("favorites/create", api.CreateFavorite)
 			//authed.GET("favorites/show", api.ShowFavorites)
 			//authed.POST("favorites/delete", api.DeleteFavorite)
-			//// 收获地址操作
-			//authed.POST("addresses/create", api.CreateAddress) //创建用户地址
+			// 收货地址操作
+			authed.POST("addresses/create", api.CreateAddress) //创建用户地址
 			//authed.GET("addresses/get", api.GetAddress)        //获取某个id的地址
 			//authed.GET("addresses/list", api.ListAddress)      //展示全部地址
 			//authed.POST("addresses/update", api.UpdateAddress) //更新用户某一个地址id的地址
